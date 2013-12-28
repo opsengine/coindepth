@@ -1,0 +1,27 @@
+<div id="all_markets" style="width=100%;">
+<input type="text" value="Search by exchange or currency"/>
+<input type="button" value="Search"/>
+</div>
+<div id="all_markets" style="width=80%; float:left;">
+<% markets.map do |exchange, pairs| %>
+<% pairs.map do |pair, orders| %>
+<% pair = [pair.split("/")[0], pair.split("/")[1]] %>
+<%= erb(
+  :depth_chart,
+  :locals => {
+    :exchange => exchange,
+    :pair => pair,
+    :bids => orders["bids"],
+    :asks => orders["asks"],
+    :width => 400,
+    :height => 300,
+    :min_price => orders["min_price"],
+    :max_price => orders["max_price"]
+  },
+  :layout => false) %>
+<% end %>
+<% end %>
+</div>
+<div id="ads" style="width=10%; float:right; border:1px solid;">
+ADS!
+</div>

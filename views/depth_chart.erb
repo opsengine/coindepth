@@ -1,0 +1,112 @@
+<% chart_id = "depth_chart_#{exchange}_#{pair[0]}_#{pair[1]}" %>
+<%
+
+def smart_round(number, digits=2)
+  Float("%.#{digits}g" % number)
+end
+
+bid_points = "["
+bids.each do |price, amount|
+  bid_points += "[#{price},#{amount}],"
+end
+bid_points += "]"
+
+ask_points = "["
+asks.each do |price, amount|
+  ask_points += "[#{price},#{amount}],"
+end
+ask_points += "]"
+cur1 = pair[0]
+cur2 = pair[1]
+bid = bids.first[0]
+ask = asks.first[0]
+spread = smart_round(asks.first[0] - bids.first[0], 3)
+spread_percent = ((asks.first[0] - bids.first[0]) / bids.first[0] * 100).round(2)
+
+%>
+<div id="<%= chart_id %>" style="float: left"></div>
+<script type='text/javascript'>//<![CDATA[
+$(function () {
+  $('#<%= chart_id %>').highcharts({
+    chart: {
+      type: 'area',
+      width: <%= width %>,
+      height: <%= height %>,
+      plotBorderWidth: 2,
+    },
+    tooltip: {
+      formatter: function() {
+        if (this.series.name == 'buy orders') {
+          condition = 'selling';
+          price = 'bid';
+          consequence = 'drop';
+          percent = (this.x - <%= bid %>) / <%= bid %> * 100;
+        } else {
+          condition = 'buying';
+          price = 'ask';
+          consequence = 'rise';
+          percent = (this.x - <%= ask %>) / <%= ask %> * 100;
+        }
+        percent = Math.round(percent);
+        message = '{0} <b>{1}</b> {2}<br/>would {3} the {4} price to <b>{5}</b> {6} ({7}%)'.format(
+          condition, this.y, '<%= cur1 %>', consequence, price, this.x, '<%= cur2 %>', percent);
+        return message;
+      }
+    },
+    legend: {
+      enabled: false,
+    },
+    title: {
+      text: '<%= exchange + " " + cur1 + "/" + cur2 %>',
+    },
+    subtitle: {
+      text: 'bid: <b><%= bid %></b> <%= cur2 %> ask: <b><%= ask %></b> <%= cur2 %> <br>spread: <b><%= spread %></b> <%= cur2 %> (<%= spread_percent %>%)',
+    },
+    xAxis: {
+      gridLineWidth: 1,
+      title: {
+        text: 'Price (<%= pair[1] %>)'
+      },
+    },
+    yAxis: {
+      gridLineWidth: 1,
+      min: 0,
+      title: {
+        text: 'Orders (<%= pair[0] %>)'
+      },
+    },
+    series: [{
+      name: 'buy orders',
+      data: <%= bid_points %>.reverse(),
+      step: 'right',
+      color: '#00bb00',
+    },{
+      name: 'sell orders',
+      data: <%= ask_points %>,
+      step: 'left',
+      color: '#bb0000',
+    }],
+    plotOptions: {
+      series: {
+        fillOpacity: 0.5,
+        animation: false,
+        marker: {
+            enabled: false
+        },
+      },
+    },
+    exporting: {
+     enabled: false
+    },
+    spacing: [0, 0, 0, 0],
+    credits: {
+      enabled: false
+    },
+
+  }/*,
+  function(chart) { // on complete
+    chart.renderer.image('http://www.ukplaster.com/acatalog/zoom-icon.png', 50, 40, 17, 17).add();
+  }*/);
+});
+//]]>
+</script>

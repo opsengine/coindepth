@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <title>...::: coindepth.com :::...</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+<!--
+    <script src="http://code.highcharts.com/stock/highstock.js"></script>
+    <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+-->
+    <script>
+    String.prototype.format = function() {
+      var formatted = this;
+      for (var i = 0; i < arguments.length; i++) {
+        var regexp = new RegExp('\\{'+i+'\\}', 'gi');
+        formatted = formatted.replace(regexp, arguments[i]);
+      }
+      return formatted;
+    };
+    </script>
+  </head>
+<!-- Welcome_to...      _            _   _                            
+  ___  ___ (_)_ __   __| | ___ _ __ | |_| |__     ___  ___  _ __ ___  
+ / __|/ _ \| | '_ \ / _` |/ _ \ '_ \| __| '_ \   / __|/ _ \| '_ ` _ \ 
+| (__| (_) | | | | | (_| |  __/ |_) | |_| | | |_| (__| (_) | | | | | |
+ \___|\___/|_|_| |_|\__,_|\___| .__/ \__|_| |_(_)\___|\___/|_| |_| |_|
+                              |_|                                     
+-->
+  <body><%= yield %></body>
+</html>
