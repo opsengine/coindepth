@@ -21,7 +21,3 @@ end
 get '/' do
   erb :home, :locals => {:markets => get_depth_data}
 end
-
-get '/btc' do
-  "Hello World"
-end
